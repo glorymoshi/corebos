@@ -9,6 +9,9 @@
  *************************************************************************************/
 
 $mod_strings = array (
+	'IMPORT_TOP' =>'has just completed your import process',
+	'IMPORT_BOTTOM' =>'We recommend you to login and check a few records to confirm 
+	that the import has been successful',
 	'Import' => 'Import',
 	'LBL_IMPORT_STEP_1' => 'Step 1',
 	'LBL_IMPORT_STEP_2' => 'Step 2',

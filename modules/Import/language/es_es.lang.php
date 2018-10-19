@@ -9,6 +9,9 @@
 *  License      : MPL 1.1
 ***********************************************************/
 $mod_strings = array (
+	'IMPORT_TOP' =>'acaba de completar su proceso de importación',
+	'IMPORT_BOTTOM' =>'Le recomendamos que inicie sesión y verifique algunos registros para confirmar 
+	que la importación se realizó correctamente.',
 	'Import' => 'Importar',
 	'LBL_IMPORT_STEP_1' => 'Paso 1',
 	'LBL_IMPORT_STEP_2' => 'Paso 2',
