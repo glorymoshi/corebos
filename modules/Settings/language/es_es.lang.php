@@ -10,6 +10,12 @@
 ***********************************************************/
 
 $mod_strings = array (
+   'EMAIL_SUBJECT'=>'Correo de prueba sobre la configuración del servidor de correo.',
+   'DEAR' => 'Dear',
+   'EMAIL_DISCRIPTION'=>'Este es un correo de prueba enviado para confirmar si realmente se está enviando un 
+   correo a través del servidor smtp que ha configurado',
+   'FREE_DELETE'=>'Siéntete libre de borrar este correo',
+    'THANKS_REGARD'=>'Gracias y saludos',
 	'LBL_MODULE_NAME' => 'Configuración',
 	'LBL_MODULE_TITLE' => 'Configuración: Inicio',
 	'LBL_LIST_CONTACT_ROLE' => 'Rol',

@@ -9,6 +9,12 @@
  ********************************************************************************/
 
 $mod_strings = array(
+'EMAIL_SUBJECT'=>'Test mail about the mail server configuration',
+'DEAR' => 'Dear',
+'EMAIL_DISCRIPTION'=>'This is a test mail sent to confirm if a mail is actually
+ being sent through the smtp server that you have configured',
+'FREE_DELETE'=>'Feel free to delete this mail',
+'THANKS_REGARD'=>'Thanks and Regards',
 'LBL_MODULE_NAME'=>'Settings',
 'LBL_MODULE_TITLE'=>'Settings: Home',
 'LBL_LIST_CONTACT_ROLE'=>'Role',
