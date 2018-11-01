@@ -321,6 +321,14 @@ if ($use_current_login) {
 	} elseif (($action == 'TraceIncomingCall' || (isset($_REQUEST['file']) && $_REQUEST['file'] == 'TraceIncomingCall')) && $module == 'PBXManager') {
 		$skip_auditing = true;
 	}
+	if ($module=='Reports' && $action=='SaveAndRun' ){
+    $action='View|XLS|CSV|PDF|Print';
+    
+	}
+	if ($module=='Reports' && $action=='ReportsAjax' ){
+	$action='Export report';
+
+	}
 	if ($audit_trail == 'true' && !$skip_auditing) {
 		if ($action=='Save') {
 			if (empty($record)) {
