@@ -297,13 +297,12 @@ class VTSimpleTemplate {
 			'orderby' => 'productid',
 			'columns' => '*',
 		);
-		$cmsqlws = __getRLQuery($wsId, $moduleName, 'Products', $queryParameters, $current_user);
-		print_r($wsId);
-		echo '<br>';
-		print_r($queryParameters);
-		echo '<br>';
-		//$cmrs = $adb->pquery($cmsqlws, array());
-		var_dump($cmsqlws);
+		$user_resultii = $adb->pquery(
+		    'SELECT productid
+			FROM vtiger_inventorydetails
+			');
+				print_r($user_resultii);
+				
 	}
 
 	private function getinvitedUsersList($recid) {
