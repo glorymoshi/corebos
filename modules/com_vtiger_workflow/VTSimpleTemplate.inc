@@ -112,7 +112,7 @@ class VTSimpleTemplate {
 					}
 				}
 			}
-		}
+						}
 		return $result;
 	}
 
@@ -270,6 +270,42 @@ class VTSimpleTemplate {
 		return $retcm;
 	}
 
+	private function getInventoryDetails($format, $field) {
+		global $adb, $current_user;
+		$wsId = $this->parent->getId();
+		if (empty($wsId)) {
+			return '';
+		}
+		$format = strtolower($format);
+		if ($format!='html' && $format!='text') {
+			$format = 'html';
+		}
+		$html = ($format == 'html');
+		$field = strtolower($field);
+		if ($field!='creator' && $field!='inventorydetails' && $field!='date' && $field!='all') {
+			$field = 'all';
+		}
+		if ($field=='all') {
+			$fields = array('creator','date','inventorydetails');
+		} else {
+			$fields = array($field);
+		}
+		$moduleName = $this->parent->getModuleName();
+		$wsUsersId = vtws_getEntityId('Users');
+		include_once 'include/Webservices/GetRelatedRecords.php';
+		$queryParameters = array(
+			'orderby' => 'productid',
+			'columns' => '*',
+		);
+		$cmsqlws = __getRLQuery($wsId, $moduleName, 'Products', $queryParameters, $current_user);
+		print_r($wsId);
+		echo '<br>';
+		print_r($queryParameters);
+		echo '<br>';
+		//$cmrs = $adb->pquery($cmsqlws, array());
+		var_dump($cmsqlws);
+	}
+
 	private function getinvitedUsersList($recid) {
 		global $adb;
 		$modulename = $this->parent->getModuleName();
@@ -278,7 +314,7 @@ class VTSimpleTemplate {
 		}
 		list($wsid,$activity_id) = explode('x', $recid);
 		$user_result = $adb->pquery(
-			'SELECT vtiger_users.email1
+		    'SELECT vtiger_users.email1
 			FROM vtiger_salesmanactivityrel
 			inner join vtiger_users on vtiger_users.id=vtiger_salesmanactivityrel.smid
 			where vtiger_salesmanactivityrel.activityid=? and vtiger_users.deleted=0',
@@ -467,6 +503,8 @@ class VTSimpleTemplate {
 				return $this->getComments($numcomm, $srtcomm, $fmtcomm, $fldcomm, $dtformat);
 			case 'groupEmailList':
 				return $this->getGroupFieldList($groupname, 'email1');
+			case 'inventorydetails':
+				return $this->getInventoryDetails('html', 'inventorydetails');
 			case 'Events_Users_Invited':
 				return $this->getinvitedUsersList($this->parent->getId());
 			case 'scanQRCode':
