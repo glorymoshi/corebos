@@ -294,15 +294,10 @@ class VTSimpleTemplate {
 		$wsUsersId = vtws_getEntityId('Users');
 		include_once 'include/Webservices/GetRelatedRecords.php';
 		$queryParameters = array(
-			'orderby' => 'productid',
 			'columns' => '*',
 		);
-		$user_resultii = $adb->pquery(
-		    'SELECT productid
-			FROM vtiger_inventorydetails
-			');
-				print_r($user_resultii);
-				
+		$cmsqlws = __getRLQuery($wsId, $moduleName, 'InventoryDetails', $queryParameters, $current_user);
+		return 	$cmsqlws;	
 	}
 
 	private function getinvitedUsersList($recid) {
@@ -503,7 +498,7 @@ class VTSimpleTemplate {
 			case 'groupEmailList':
 				return $this->getGroupFieldList($groupname, 'email1');
 			case 'inventorydetails':
-				return $this->getInventoryDetails('html', 'inventorydetails');
+				return $this->getInventoryDetails($format, $field);
 			case 'Events_Users_Invited':
 				return $this->getinvitedUsersList($this->parent->getId());
 			case 'scanQRCode':
