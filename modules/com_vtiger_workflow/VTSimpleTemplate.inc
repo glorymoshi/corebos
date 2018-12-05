@@ -290,14 +290,96 @@ class VTSimpleTemplate {
 		} else {
 			$fields = array($field);
 		}
+		$queryParameters = array(
+			'orderby' => 'createdtime',
+			'columns' => '*',
+		);
+		$singlefield = (count($fields)==1);
+		$datefmtuserid = $this->parent->get('assigned_user_id');
+		if (!empty($datefmtuserid)) {
+			list($void,$dfuid) = explode('x', $datefmtuserid);
+			if (file_exists('user_privileges/user_privileges_' . $dfuid . '.php')) {
+				$datefmtuser = new Users();
+				$datefmtuser->retrieveCurrentUserInfoFromFile($dfuid);
+			} else {
+				$datefmtuser = $current_user;
+			}
+		} else {
+			$datefmtuser = $current_user;
+		}
 		$moduleName = $this->parent->getModuleName();
 		$wsUsersId = vtws_getEntityId('Users');
 		include_once 'include/Webservices/GetRelatedRecords.php';
-		$queryParameters = array(
-			'columns' => '*',
-		);
 		$cmsqlws = __getRLQuery($wsId, $moduleName, 'InventoryDetails', $queryParameters, $current_user);
-		return 	$cmsqlws;	
+		var_dump($cmsqlws);
+		$inventoryresults = $adb->pquery($cmsqlws, array());
+		$retcm = '';
+		if ($html) {
+			$retcm = '<div class="inventory">';
+		}
+		while ($cm = $adb->fetch_array($inventoryresults)) {
+			if ($html) {
+				$retcm .= '<div class="productdetails"><ul class="inventoryfields">';
+			}
+			foreach ($fields as $field) {
+				switch ($field) {
+					case 'creator':
+						if ($html) {
+							$retcm .= '<li class="productcreator">';
+						}
+						if ($moduleName!='HelpDesk' && $moduleName!='Faq') {
+							$wsid = $wsUsersId;
+						} else {
+							list($wsid,$crmid) = explode('x', $cm['creator']);
+						}
+						if ($wsUsersId==$wsid) {
+							$un = getUserFullName($cm['creator']);
+						} else {
+							$un = getParentName($cm['creator']);
+						}
+						$retcm .= $un;
+						if (!$html && !$singlefield) {
+							$retcm .= "\n";
+						}
+						if ($html) {
+							$retcm .= '</li>';
+						}
+						break;
+					case 'date':
+						if ($html) {
+							$retcm .= '<li class="productdate">';
+						}
+							$dt = new DateTimeField($cm['createdtime']);
+							$retcm .= $dt->getDisplayDateTimeValue($datefmtuser);
+						if (!$html && !$table && !$singlefield) {
+							$retcm .= "\n";
+						}
+						if ($html) {
+							$retcm .= '</li>';
+						}
+						break;
+					case 'inventorydetails':
+						if ($html) {
+							$retcm .= '<li class="productproduct">';
+						}
+						$retcm .= vtlib_purify($cm['productid']);
+						if (!$html && !$singlefield) {
+							$retcm .= "\n";
+						}
+						if ($html) {
+							$retcm .= '</li>';
+						}
+						break;
+				}
+			}
+			if ($html) {
+				$retcm .= '</ul></div>';
+			}
+		}
+		if ($html ) {
+			$retcm .= '</div>';
+		}
+		return $retcm;
 	}
 
 	private function getinvitedUsersList($recid) {
@@ -498,7 +580,7 @@ class VTSimpleTemplate {
 			case 'groupEmailList':
 				return $this->getGroupFieldList($groupname, 'email1');
 			case 'inventorydetails':
-				return $this->getInventoryDetails($format, $field);
+				return $this->getInventoryDetails('html', 'all');
 			case 'Events_Users_Invited':
 				return $this->getinvitedUsersList($this->parent->getId());
 			case 'scanQRCode':
