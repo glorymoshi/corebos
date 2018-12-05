@@ -171,6 +171,7 @@ class VTSimpleTemplate {
 			$queryParameters['limit'] = $num;
 		}
 		$cmsqlws = __getRLQuery($wsId, $moduleName, 'ModComments', $queryParameters, $current_user);
+		var_dump($cmsqlws);
 		$retcm = '';
 		if ($html || $table) {
 			$retcm = '<div class="comments">';
@@ -291,7 +292,6 @@ class VTSimpleTemplate {
 			$fields = array($field);
 		}
 		$queryParameters = array(
-			'orderby' => 'createdtime',
 			'columns' => '*',
 		);
 		$singlefield = (count($fields)==1);
@@ -319,19 +319,18 @@ class VTSimpleTemplate {
 		}
 		while ($cm = $adb->fetch_array($inventoryresults)) {
 			if ($html) {
-				$retcm .= '<div class="productdetails"><ul class="inventoryfields">';
+				$retcm .= '<div class="inentorydetails"><ul class="inventoryfields">';
 			}
 			foreach ($fields as $field) {
 				switch ($field) {
 					case 'creator':
 						if ($html) {
-							$retcm .= '<li class="productcreator">';
+							$retcm .= '<li class="inventorycreator">';
 						}
-						if ($moduleName!='HelpDesk' && $moduleName!='Faq') {
+						if ($moduleName!='Products') {
 							$wsid = $wsUsersId;
-						} else {
-							list($wsid,$crmid) = explode('x', $cm['creator']);
 						}
+						$wsid = $wsUsersId;
 						if ($wsUsersId==$wsid) {
 							$un = getUserFullName($cm['creator']);
 						} else {
@@ -347,11 +346,11 @@ class VTSimpleTemplate {
 						break;
 					case 'date':
 						if ($html) {
-							$retcm .= '<li class="productdate">';
+							$retcm .= '<li class="inventorydate">';
 						}
 							$dt = new DateTimeField($cm['createdtime']);
 							$retcm .= $dt->getDisplayDateTimeValue($datefmtuser);
-						if (!$html && !$table && !$singlefield) {
+						if (!$html && !$singlefield) {
 							$retcm .= "\n";
 						}
 						if ($html) {
