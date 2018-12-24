@@ -3305,12 +3305,22 @@ class ReportRun extends CRMEntity {
 						case 'time':
 							if ($value!='-') {
 								if (strpos($value, ':')>0 && (strpos($value, '-')===false)) {
+									try {
+										$dt = new DateTime("1970-01-01 $value");
+									} catch (Exception $e) {
+										echo $e->getMessage();
+										return(0);
+									}
 									// only time, no date
-									$dt = new DateTime("1970-01-01 $value");
 								} elseif (strpos($value, ':')>0 && (strpos($value, '-')>0)) {
 									// date and time
-									$dt = new DateTime($value);
-									$datetime = true;
+									try {
+										$dt = new DateTime($value);
+										$datetime = true;
+									} catch (Exception $e) {
+										echo $e->getMessage();
+										return(0);
+									}
 								} else {
 									$value = DateTimeField::__convertToDBFormat($value, $current_user->date_format);
 									$dt = new DateTime($value);
