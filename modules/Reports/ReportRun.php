@@ -3308,8 +3308,7 @@ class ReportRun extends CRMEntity {
 									try {
 										$dt = new DateTime("1970-01-01 $value");
 									} catch (Exception $e) {
-										echo $e->getMessage();
-										return(0);
+										error_log('Date time error - ' . $e -> getMessage());
 									}
 									// only time, no date
 								} elseif (strpos($value, ':')>0 && (strpos($value, '-')>0)) {
@@ -3318,8 +3317,7 @@ class ReportRun extends CRMEntity {
 										$dt = new DateTime($value);
 										$datetime = true;
 									} catch (Exception $e) {
-										echo $e->getMessage();
-										return(0);
+										error_log('Date time error - ' . $e -> getMessage());
 									}
 								} else {
 									$value = DateTimeField::__convertToDBFormat($value, $current_user->date_format);
