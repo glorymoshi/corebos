@@ -3307,11 +3307,10 @@ class ReportRun extends CRMEntity {
 								if (strpos($value, ':')>0 && (strpos($value, '-')===false)) {
 									try {
 										$dt = new DateTime("1970-01-01 $value");
-										} 
-									catch (Exception $e) {
-										$vaarr = split ("\:", $value); 
-										$vaarr[1] = substr($vaarr[1],1,2);
-                                        $value=$vaarr[0].':'.$vaarr[1];
+									} catch (Exception $e) {
+										$vaarr = split("\:", $value);
+										$vaarr[1] = substr($vaarr[1], 1, 2);
+										$value=$vaarr[0].':'.$vaarr[1];
 										$dt = $value;
 									}
 									// only time, no date
@@ -3320,11 +3319,10 @@ class ReportRun extends CRMEntity {
 									try {
 										$dt = new DateTime($value);
 										$datetime = true;
-									} 
-									catch (Exception $e) {
-										$vaarr = split ("\:", $value); 
-										$vaarr[1] = substr($vaarr[1],1,2);
-                                        $value=$vaarr[0].':'.$vaarr[1];
+									} catch (Exception $e) {
+										$vaarr = split("\:", $value);
+										$vaarr[1] = substr($vaarr[1], 1, 2);
+										$value=$vaarr[0].':'.$vaarr[1];
 										$dt = $value;
 									}
 								} else {
