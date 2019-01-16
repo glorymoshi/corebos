@@ -3226,6 +3226,9 @@ class ReportRun extends CRMEntity {
 		global $currentModule, $current_language, $current_user;
 		$mod_strings = return_module_language($current_language, $currentModule);
 
+		global $log;
+		$log->fatal("Writing Report");
+
 		require_once 'include/PHPExcel/PHPExcel.php';
 		$xlsrowheight = GlobalVariable::getVariable('Report_Excel_Export_RowHeight', 20);
 		$workbook = new PHPExcel();
@@ -3291,6 +3294,7 @@ class ReportRun extends CRMEntity {
 				foreach ($array_value as $hdr => $value) {
 					$value = decode_html($value);
 					$datetime = false;
+					$log->info('Report :: Datetime Inanuletea Viazi'.$dt);
 					switch ($FieldDataTypes[$hdr]) {
 						case 'boolean':
 							$celltype = PHPExcel_Cell_DataType::TYPE_BOOL;
@@ -3308,6 +3312,9 @@ class ReportRun extends CRMEntity {
 									try {
 										$dt = new DateTime("1970-01-01 $value");
 									} catch (Exception $e) {
+										$vaarr = split ("\:", $value); 
+										$vaarr[1] = substr($vaarr[1],1,2);
+                                        $value=$vaarr[0].':'.$vaarr[1];
 										$dt = $value;
 									}
 									// only time, no date
@@ -3317,6 +3324,9 @@ class ReportRun extends CRMEntity {
 										$dt = new DateTime($value);
 										$datetime = true;
 									} catch (Exception $e) {
+										$vaarr = split ("\:", $value); 
+										$vaarr[1] = substr($vaarr[1],1,2);
+                                        $value=$vaarr[0].':'.$vaarr[1];
 										$dt = $value;
 									}
 								} else {
@@ -3333,6 +3343,7 @@ class ReportRun extends CRMEntity {
 							$celltype = PHPExcel_Cell_DataType::TYPE_STRING;
 							break;
 					}
+
 					if ($FieldDataTypes[$hdr]=='currency') {
 						$csym = preg_replace('/[0-9,.-]/', '', $value);
 						$value = preg_replace('/[^0-9,.-]/', '', $value);
