@@ -63,6 +63,7 @@ class FieldInfo extends processcbMap {
 	public function processMap($arguments) {
 		return $this->convertMap2Array();
 	}
+	
 
 	private function convertMap2Array() {
 		$xml = $this->getXMLContent();
