@@ -454,6 +454,13 @@ $GlobalVariableDefinitons = array(
 	'values' => '',
 	'definition' => 'URL to go to when a user clicks on help icon in the upper right corner. If set to 0 no help icon will be shown. The default value is corebos.org wiki.',
 ),
+'Application_Popup_Address_Selection'=> array(
+	'status' => 'Implemented',
+	'valuetype' => 'Boolean',
+	'category' => 'Application',
+	'values' => '0 | 1',
+	'definition' => 'Shows option to select an address in Account and Contact(by default is 1),if set to 0 then the whole option to select an address will not be shown.',
+),
 'WebService_Session_Life_Span' => array(
 	'status' => 'Implemented',
 	'valuetype' => 'Integer',

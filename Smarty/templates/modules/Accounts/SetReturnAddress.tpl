@@ -38,6 +38,7 @@
 </table>
 <table border=0 cellspacing=0 cellpadding=5 width=95% align=center> 
 	<tr><td class="small">
+	{if $PopupAdressSelection eq '1'}
 		<table border=0 cellspacing=0 cellpadding=5 width=100% align=center bgcolor=white>
 			<tr>
 				<td align="left">{'SetReturnAddressDescription'|@getTranslatedString}.<br><br>
@@ -56,6 +57,7 @@
 				</td>
 			</tr>
 		</table>
+		{/if}
 	</td></tr>
 </table>
 <table border=0 cellspacing=0 cellpadding=5 width=100% class="layerPopupTransport">
