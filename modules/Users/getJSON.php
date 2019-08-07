@@ -18,8 +18,13 @@
 require_once 'include/utils/utils.php';
 require_once 'Users.php';
 global $app_strings, $current_user;
-if ($current_user->is_admin != 'on') {
-	die('<br><br><center>'.$app_strings['LBL_PERMISSION']." <a href='javascript:window.history.back()'>".$app_strings['LBL_GO_BACK'].'.</a></center>');
+if (!is_admin($current_user)) {
+	echo '<br><br>';
+	$smarty = new vtigerCRM_Smarty();
+	$smarty->assign('ERROR_MESSAGE_CLASS', 'cb-alert-danger');
+	$smarty->assign('ERROR_MESSAGE', getTranslatedString('LBL_PERMISSION'));
+	$smarty->display('applicationmessage.tpl');
+	exit;
 }
 
 $response = array(
@@ -67,6 +72,7 @@ if (isset($_REQUEST['order_by']) && is_numeric($_REQUEST['order_by'])) {
 			break;
 		case 3:
 			$order_by = $focus->list_fields_name['Admin'];
+			break;
 		case 4:
 			$order_by = $focus->list_fields_name['Email2'];
 			break;

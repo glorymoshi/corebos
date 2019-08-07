@@ -269,12 +269,8 @@ function getDetailViewOutputHtml($uitype, $fieldname, $fieldlabel, $col_fields, 
 		}
 		$label_fld[] = getTranslatedString($fieldlabel, $module);
 		$label_fld[] = $col_fields[$fieldname];
-	} elseif ($uitype == 20 || $uitype == 21 || $uitype == 22 || $uitype == 24) {
-		if ($uitype == 20) {
-			$col_fields[$fieldname] = $col_fields[$fieldname];
-		} else {
-			$col_fields[$fieldname] = nl2br($col_fields[$fieldname]);
-		}
+	} elseif ($uitype == 21) {
+		$col_fields[$fieldname] = nl2br($col_fields[$fieldname]);
 		$label_fld[] = getTranslatedString($fieldlabel, $module);
 		$label_fld[] = $col_fields[$fieldname];
 	} elseif ($uitype == 51 || $uitype == 73) {
@@ -1023,13 +1019,6 @@ function getDetailViewOutputHtml($uitype, $fieldname, $fieldlabel, $col_fields, 
 			$label_fld[] = $currencyField->getDisplayValue(null, false, true);
 			$label_fld['cursymb'] = $currencyField->getCurrencySymbol();
 		}
-	} elseif ($uitype == 76) {
-		$label_fld[] = getTranslatedString($fieldlabel, $module);
-		$potential_id = $col_fields[$fieldname];
-		$potential_name = (empty($potential_id) ? '' : getPotentialName($potential_id));
-		$label_fld[] = $potential_name;
-		$label_fld['secid'] = $potential_id;
-		$label_fld['link'] = 'index.php?module=Potentials&action=DetailView&record=' . $potential_id;
 	} elseif ($uitype == 78) {
 		$label_fld[] = getTranslatedString($fieldlabel, $module);
 		$quote_id = $col_fields[$fieldname];

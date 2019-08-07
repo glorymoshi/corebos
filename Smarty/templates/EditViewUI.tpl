@@ -278,6 +278,9 @@ alt="{'LBL_CLEAR'|@getTranslatedString}" title="{'LBL_CLEAR'|@getTranslatedStrin
 					{rdelim});
 					var oCKeditor{$fldname} = CKEDITOR.instances[{$fldname}];
 				</script>
+				{if vt_hasRTESpellcheck()}
+					<script type="text/javascript" src="include/ckeditor/config_spellcheck.js"></script>
+				{/if}
 				{/if}
 			</td>
 		{elseif $uitype eq 21 || $uitype eq 24}
@@ -485,15 +488,6 @@ alt="{'LBL_CLEAR'|@getTranslatedString}" title="{'LBL_CLEAR'|@getTranslatedStrin
 			<td id="td_val_{$fldname}" width="30%" align=left class="dvtCellInfo">
 				<span style='display:none;' id='{$fldname}_hidden'></span>
 				<input name="quote_name" readonly type="text" style="border:1px solid #bababa;" value="{$fldvalue}"><input name="{$fldname}" type="hidden" value="{$secondvalue}" >&nbsp;<img src="{'select.gif'|@vtiger_imageurl:$THEME}" alt="{$APP.LBL_SELECT}" title="{$APP.LBL_SELECT}" onclick='selectQuote()' align="absmiddle" style='cursor:hand;cursor:pointer' >&nbsp;<input type="image" tabindex="{$vt_tab}" src="{'clear_field.gif'|@vtiger_imageurl:$THEME}" alt="{$APP.LBL_CLEAR}" title="{$APP.LBL_CLEAR}" onClick="this.form.quote_id.value=''; this.form.quote_name.value='';return false;" align="absmiddle" style='cursor:hand;cursor:pointer'>
-			</td>
-
-		{elseif $uitype eq 76}
-			<td id="td_{$fldname}" width="20%" class="dvtCellLabel{if $mandatory_field == '*'} mandatory_field_label{/if}" align=right>
-				<font color="red">{$mandatory_field}</font>{$usefldlabel} {if $MASS_EDIT eq '1'}<input type="checkbox" name="{$fldname}_mass_edit_check" id="{$fldname}_mass_edit_check" class="small" >{/if}
-			</td>
-			<td id="td_val_{$fldname}" width="30%" align=left class="dvtCellInfo">
-				<span style='display:none;' id='{$fldname}_hidden'></span>
-				<input name="potential_name" readonly type="text" style="border:1px solid #bababa;" value="{$fldvalue}"><input name="{$fldname}" type="hidden" value="{$secondvalue}">&nbsp;<img tabindex="{$vt_tab}" src="{'select.gif'|@vtiger_imageurl:$THEME}" alt="{$APP.LBL_SELECT}" title="{$APP.LBL_SELECT}" onclick='selectPotential()' align="absmiddle" style='cursor:hand;cursor:pointer'>&nbsp;<input type="image" src="{'clear_field.gif'|@vtiger_imageurl:$THEME}" alt="{$APP.LBL_CLEAR}" title="{$APP.LBL_CLEAR}" onClick="this.form.potential_id.value=''; this.form.potential_name.value='';return false;" align="absmiddle" style='cursor:hand;cursor:pointer'>
 			</td>
 
 		{elseif $uitype eq 17}
@@ -1212,7 +1206,7 @@ alt="{'LBL_CLEAR'|@getTranslatedString}" title="{'LBL_CLEAR'|@getTranslatedStrin
 			{assign var=rloopit value=$rowiteration}
 			{foreach item=tax key=count from=$TAX_DETAILS}
 				{if $rloopit==2}
-					<tr>
+					<tr name="tbl{$header|replace:' ':''}Content" style="height:25px" class="createview_field_row">
 				{else}
 					{assign var=rloopit value=2}
 				{/if}
@@ -1223,18 +1217,20 @@ alt="{'LBL_CLEAR'|@getTranslatedString}" title="{'LBL_CLEAR'|@getTranslatedStrin
 					{assign var=check_value value=""}
 					{assign var=show_value value="hidden"}
 				{/if}
-				<td id="td_{$tax.check_name}" align="right" class="dvtCellLabel" style="border:0px solid red;">
+				<td id="td_{$tax.check_name}" align="right" class="dvtCellLabel">
 					{$tax.taxlabel} {$APP.COVERED_PERCENTAGE}
-					<input type="checkbox" name="{$tax.check_name}" id="{$tax.check_name}" class="small" onclick="fnshowHide(this,'{$tax.taxname}')" {$check_value}>
+					<input type="checkbox" name="{$tax.check_name}" id="{$tax.check_name}" class="small" onclick="fnshowHide(this,'td_val_{$tax.check_name}')" {$check_value}>
 				</td>
-				<td id="td_val_{$tax.check_name}" class="dvtCellInfo" align="left" style="border:0px solid red;">
+				<td id="td_val_{$tax.check_name}" class="dvtCellInfo" align="left" style="visibility:{$show_value};">
 					<span style='display:none;' id='{$fldname}_hidden'></span>
-					<input type="text" class="detailedViewTextBox" name="{$tax.taxname}" id="{$tax.taxname}" value="{$tax.percentage}" style="visibility:{$show_value};" onBlur="fntaxValidation('{$tax.taxname}')">
+					<input type="text" class="detailedViewTextBox" name="{$tax.taxname}" id="{$tax.taxname}" value="{$tax.percentage}" onBlur="fntaxValidation('{$tax.taxname}')">
 				</td>
 				<td colspan="2" class="dvtCellInfo">&nbsp;</td>
 				</tr>
 			{/foreach}
-
+			{if $rowiteration==1}
+				<tr name="tbl{$header|replace:' ':''}Content" style="height:25px" class="createview_field_row">
+			{/if}
 		{else}
 			{* just show field on screen *}
 			<td id="td_{$fldname}" width=20% class="dvtCellLabel" align=right>{$fldlabel}</td>

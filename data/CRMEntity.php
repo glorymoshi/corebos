@@ -2569,12 +2569,18 @@ class CRMEntity {
 	public function transferRelatedRecords($module, $transferEntityIds, $entityId) {
 		global $adb, $log;
 		$log->debug('> transferRelatedRecords '.$module.','.print_r($transferEntityIds, true).','.$entityId);
-
+		include_once 'include/utils/duplicate.php';
 		$rel_table_arr = array('Activities'=>'vtiger_seactivityrel');
-
 		$tbl_field_arr = array('vtiger_seactivityrel'=>'activityid');
-
 		$entity_tbl_field_arr = array('vtiger_seactivityrel'=>'crmid');
+		$depmods = getUIType10DependentModules($module);
+		unset($depmods['ModComments']);
+		foreach ($depmods as $mod => $details) {
+			$rel_table_arr[$mod] = $details['tablename'];
+			$modobj = CRMEntity::getInstance($mod);
+			$tbl_field_arr[$details['tablename']] = $modobj->tab_name_index[$details['tablename']];
+			$entity_tbl_field_arr[$details['tablename']] = $details['columname'];
+		}
 
 		foreach ($transferEntityIds as $transferId) {
 			foreach ($rel_table_arr as $rel_table) {
@@ -2598,9 +2604,12 @@ class CRMEntity {
 				}
 			}
 
-			// Pick the records related to the entity to be transfered, but do not pick the once which are already related to the current entity.
-			$relatedRecords = $adb->pquery("SELECT relcrmid, relmodule FROM vtiger_crmentityrel WHERE crmid=? AND module=?" .
-					" AND relcrmid NOT IN (SELECT relcrmid FROM vtiger_crmentityrel WHERE crmid=? AND module=?)", array($transferId, $module, $entityId, $module));
+			// Pick the records related to the entity to be transfered, but do not pick the ones which are already related to the current entity.
+			$relatedRecords = $adb->pquery(
+				'SELECT relcrmid, relmodule FROM vtiger_crmentityrel WHERE crmid=? AND module=?'
+					.' AND relcrmid NOT IN (SELECT relcrmid FROM vtiger_crmentityrel WHERE crmid=? AND module=?)',
+				array($transferId, $module, $entityId, $module)
+			);
 			$numOfRecords = $adb->num_rows($relatedRecords);
 			for ($i = 0; $i < $numOfRecords; $i++) {
 				$relcrmid = $adb->query_result($relatedRecords, $i, 'relcrmid');
@@ -2611,7 +2620,7 @@ class CRMEntity {
 				);
 			}
 
-			// Pick the records to which the entity to be transfered is related, but do not pick the once to which current entity is already related.
+			// Pick the records to which the entity to be transfered is related, but do not pick the ones to which current entity is already related.
 			$parentRecords = $adb->pquery(
 				'SELECT crmid, module FROM vtiger_crmentityrel WHERE relcrmid=? AND relmodule=? AND crmid NOT IN
 					(SELECT crmid FROM vtiger_crmentityrel WHERE relcrmid=? AND relmodule=?)',
@@ -3317,13 +3326,14 @@ class CRMEntity {
 	 * return string $sorder    - sortorder string either 'ASC' or 'DESC'
 	 */
 	public function getSortOrder() {
-		global $log,$currentModule;
+		global $log;
+		$cmodule = get_class($this);
 		$log->debug('> getSortOrder');
-		$sorder = strtoupper(GlobalVariable::getVariable('Application_ListView_Default_OrderDirection', $this->default_sort_order, $currentModule));
+		$sorder = strtoupper(GlobalVariable::getVariable('Application_ListView_Default_OrderDirection', $this->default_sort_order, $cmodule));
 		if (isset($_REQUEST['sorder'])) {
 			$sorder = $this->db->sql_escape_string($_REQUEST['sorder']);
-		} elseif (!empty($_SESSION[$currentModule.'_Sort_Order'])) {
-			$sorder = $this->db->sql_escape_string($_SESSION[$currentModule.'_Sort_Order']);
+		} elseif (!empty($_SESSION[$cmodule.'_Sort_Order'])) {
+			$sorder = $this->db->sql_escape_string($_SESSION[$cmodule.'_Sort_Order']);
 		}
 		$log->debug('< getSortOrder');
 		return $sorder;
@@ -3334,18 +3344,18 @@ class CRMEntity {
 	 * return string $order_by    - fieldname(eg: 'accountname')
 	 */
 	public function getOrderBy() {
-		global $log, $currentModule;
+		global $log;
 		$log->debug('> getOrderBy');
-
+		$cmodule = get_class($this);
 		$order_by = '';
-		if (GlobalVariable::getVariable('Application_ListView_Default_Sorting', 0, $currentModule)) {
-			$order_by = GlobalVariable::getVariable('Application_ListView_Default_OrderField', $this->default_order_by, $currentModule);
+		if (GlobalVariable::getVariable('Application_ListView_Default_Sorting', 0, $cmodule)) {
+			$order_by = GlobalVariable::getVariable('Application_ListView_Default_OrderField', $this->default_order_by, $cmodule);
 		}
 
 		if (isset($_REQUEST['order_by'])) {
 			$order_by = $this->db->sql_escape_string($_REQUEST['order_by']);
-		} elseif (!empty($_SESSION[$currentModule.'_Order_By'])) {
-			$order_by = $this->db->sql_escape_string($_SESSION[$currentModule.'_Order_By']);
+		} elseif (!empty($_SESSION[$cmodule.'_Order_By'])) {
+			$order_by = $this->db->sql_escape_string($_SESSION[$cmodule.'_Order_By']);
 		}
 		$log->debug('< getOrderBy');
 		return $order_by;
