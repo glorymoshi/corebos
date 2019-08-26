@@ -14,7 +14,7 @@
 * at <http://corebos.org/documentation/doku.php?id=en:devel:vpl11>
 *************************************************************************************************/
 
-class addCbRuleMissingContext extends cbupdaterWorker {
+class installPushNotWorkflowTask extends cbupdaterWorker {
 
 	public function applyChange() {
 		if ($this->hasError()) {
@@ -23,16 +23,20 @@ class addCbRuleMissingContext extends cbupdaterWorker {
 		if ($this->isApplied()) {
 			$this->sendMsg('Changeset '.get_class($this).' already applied!');
 		} else {
-			global $adb;
-			$result = $adb->pquery('SELECT operationid FROM vtiger_ws_operation WHERE name = ?', array('cbRule'));
-			if ($result) {
-				$operationid = $adb->query_result($result, 0, 'operationid');
-				if (isset($operationid)) {
-					$this->ExecuteQuery("INSERT INTO vtiger_ws_operation_parameters (operationid, name, type, sequence) VALUES ($operationid, 'context', 'String', 2);");
-				}
-			}
+			include_once 'modules/com_vtiger_workflow/VTTaskManager.inc';
+			$defaultModules = array('include' => array(), 'exclude'=>array());
+			$taskType= array(
+				'name'=>'CBPushNotificationTask',
+				'label'=>'CBPushNotificationTask',
+				'classname'=>'CBPushNotificationTask',
+				'classpath'=>'modules/com_vtiger_workflow/tasks/CBPushNotificationTask.php',
+				'templatepath'=>'com_vtiger_workflow/taskforms/CBPushNotificationTask.tpl',
+				'modules'=>$defaultModules,
+				'sourcemodule'=>'',
+			);
+			VTTaskType::registerTaskType($taskType);
 			$this->sendMsg('Changeset '.get_class($this).' applied!');
-			$this->markApplied(false);
+			$this->markApplied();
 		}
 		$this->finishExecution();
 	}
