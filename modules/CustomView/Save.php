@@ -56,10 +56,13 @@ if ($cvmodule != '') {
 	} else {
 		 $status = CV_STATUS_PRIVATE;
 	}
+<<<<<<< HEAD
 
 	if (!($_REQUEST['newsave']) && $status != CV_STATUS_PRIVATE) {
 		$status = CV_STATUS_PENDING;
 	}
+=======
+>>>>>>> 46851295ef327dd7b2f17752906a89341272c440
 	if (empty($_REQUEST['newsave']) && $status != CV_STATUS_PRIVATE) {
 		$status = CV_STATUS_PENDING;
 	}
