@@ -9,6 +9,7 @@
  ********************************************************************************/
 require_once 'include/logging.php';
 require_once 'include/utils/utils.php';
+require_once 'include/Webservices/upsert.php';
 global $adb, $log, $current_user;
 
 function cvGetNewViewName() {
@@ -56,13 +57,6 @@ if ($cvmodule != '') {
 	} else {
 		 $status = CV_STATUS_PRIVATE;
 	}
-<<<<<<< HEAD
-
-	if (!($_REQUEST['newsave']) && $status != CV_STATUS_PRIVATE) {
-		$status = CV_STATUS_PENDING;
-	}
-=======
->>>>>>> 46851295ef327dd7b2f17752906a89341272c440
 	if (empty($_REQUEST['newsave']) && $status != CV_STATUS_PRIVATE) {
 		$status = CV_STATUS_PENDING;
 	}
@@ -441,6 +435,35 @@ if ($cvmodule != '') {
 		}
 	}
 }
+if (isset($_REQUEST['setStatus']) && $_REQUEST['setStatus'] != '' && $_REQUEST['setStatus'] == '1') {
+	$setpublic = 1;
+} else {
+	$setpublic = 0;
+}
+$roleid = $current_user->roleid;
+$subrole = implode('|##|' , getRoleSubordinates($roleid));
+$default_values =  array(
+	'cvid' => $cvid,
+	'cvcreate' => '0',
+	'cvretrieve' => '1',
+	'cvupdate' => '1',
+	'cvdelete' => '1',
+	'cvdefault' => $setdefault,
+	'cvapprove' =>'0',
+	'setpublic' => $setpublic,
+	'mandatory' => '0',
+	'assigned_user_id' => $current_user->id,
+	'cvrole' => $subrole 
+);
+
+$searchOn = "cvid";
+
+$updatedfield = array(
+	'id' => $cvid,
+	'cvdefault' => $setdefault,
+	'setpublic' => $setpublic,
+);
+vtws_upsert('cbCVManagement', $default_values,$searchOn,$updatedfield,$current_user);
 
 header('Location: index.php?action='.urlencode($return_action).'&module='.urlencode($cvmodule).'&viewname='.urlencode($cvid));
 ?>
