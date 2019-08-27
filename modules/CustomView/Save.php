@@ -453,7 +453,7 @@ $default_values =  array(
 	'setpublic' => $setpublic,
 	'mandatory' => '0',
 	'assigned_user_id' => $current_user->id,
-	'cvrole' => $subrole 
+	'cvrole' => $subrole
 );
 
 $searchOn = "cvid";
