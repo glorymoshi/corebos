@@ -13,7 +13,7 @@
  * permissions and limitations under the License. You may obtain a copy of the License
  * at <http://corebos.org/documentation/doku.php?id=en:devel:vpl11>
  *************************************************************************************************/
-function vtws_upsert($elementType, $element, $searchOn, $user) {
+function vtws_upsert($elementType, $element, $searchOn, $updatedfield, $user) {
 	global $adb;
 	$searchFields = explode(",", $searchOn);
 	$searchWithValues = [];
@@ -51,6 +51,11 @@ function vtws_upsert($elementType, $element, $searchOn, $user) {
 		$moduleTableIndexList = $meta->getEntityTableIndexList();
 		$baseTableIndex = $moduleTableIndexList[$baseTable];
 		$crmId = $adb->query_result($result, 0, $baseTableIndex);
+		if (count($updatedfield) > 0) {
+			$element =$updatedfield;
+		} else {
+			$element  = $element ;
+		}
 		$element['id'] = vtws_getEntityId($elementType).'x'.$crmId;
 		$record = vtws_revise($element, $user);
 	}
