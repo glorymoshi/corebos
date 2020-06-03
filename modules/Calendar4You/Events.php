@@ -365,6 +365,7 @@ foreach ($Users_Ids as $userid) {
 			$title = "<font style='font-size:12px'>".$into_title.'</font>';
 			if ($add_more_info) {
 				if (isset($Event_Info[$event]) && count($Event_Info[$event]) > 0) {
+					$row["activitytype"] = getTranslatedString($row["activitytype"]);
 					$titlemi = '';
 					foreach ($Event_Info[$event] as $CD) {
 						$titlemi .= transferForAddIntoTitle(2, $row, $CD);
