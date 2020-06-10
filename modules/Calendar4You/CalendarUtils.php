@@ -439,7 +439,8 @@ function transferForAddIntoTitle($type, $row, $CD) {
 			$Cal_Data[1] = '<a target=_blank href="index.php?module=cbCalendar&action=DetailView&record=' . $row['crmid'] . '">' . $Cal_Data[1] . '</a>';
 		}
 		if (strpos($Cal_Data[1], 'vtlib_metainfo')===false) {
-			$Cal_Data[1] .= "<span type='vtlib_metainfo' vtrecordid='".$row['crmid']."' vtfieldname='".$CD['fieldname']
+			$valueTranslate = getTranslatedString($Cal_Data[1], $CD['module']);
+			$valueTranslate .= "<span type='vtlib_metainfo' vtrecordid='".$row['crmid']."' vtfieldname='".$CD['fieldname']
 				."' vtmodule='cbCalendar' style='display:none;'></span>";
 		}
 	} else {
