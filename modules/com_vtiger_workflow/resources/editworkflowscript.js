@@ -712,6 +712,9 @@ function editworkflowscript($, conditions) {
 					}
 
 					$('#save_submit').bind('click', function () {
+						if (!fieldValidator.validate()) {
+							return false;
+						}
 						var conditions = [];
 						i=0;
 						$('#save_conditions').children('.condition_group_block').each(function (j, conditiongroupblock) {
@@ -853,3 +856,4 @@ function onschedule_selectschedule(selbox) {
 		break;
 	}
 }
+
