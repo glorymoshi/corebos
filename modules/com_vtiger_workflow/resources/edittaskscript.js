@@ -1,5 +1,5 @@
 function edittaskscript($) {
-    var validator;
+	var validator;
 
 	function NumberBox(element) {
 		var elementId = element.prop('id');
@@ -51,7 +51,7 @@ function edittaskscript($) {
 			window.location=returnUrl;
 		});
 		$('#save').bind('click', function edittasksaveevent() {
-            if (!validator.validate()) {
+			if (!validator.validate()) {
 				return false;
 			}
 			var conditions = [];
